@@ -60,12 +60,12 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
     // scales
     var xScale =
       d3.scaleLinear()
-        .domain(d3.extent(data, d => d.two))
+        .domain(d3.extent(data, d => d.twoPct))
         .range([padding, width - padding]);
 
     var yScale =
       d3.scaleLinear()
-        .domain(d3.extent(data, d => d.three))
+        .domain(d3.extent(data, d => d.threePct))
         .range([height - padding, padding]);
 
     var fScale =
@@ -109,8 +109,8 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
     update
       .enter()
       .append("circle")
-        .attr("cx", d => xScale(d.two))
-        .attr("cy", d => yScale(d.three))
+        .attr("cx", d => xScale(d.twoPct))
+        .attr("cy", d => yScale(d.threePct))
         .attr("stroke", "white")
         .attr("stroke-width", 1)
         .on("mousemove touchstart", showTooltip)
@@ -118,8 +118,8 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
       .merge(update)
       .transition(t)
       .ease(d3.easeSinInOut)
-        .attr("cx", d => xScale(d.two))
-        .attr("cy", d => yScale(d.three))
+        .attr("cx", d => xScale(d.twoPct))
+        .attr("cy", d => yScale(d.threePct))
         .attr("r", d => rScale(d.minutes))
         .attr("fill", d => fScale(d.true));
   }
@@ -133,9 +133,11 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
         .html(`
           <p>Player: ${d.player}</p>
           <p>Age: ${d.age}</p>
-          <p>2PT%: ${d.two}</p>
-          <p>3PT%: ${d.three}</p>
-          <p>TS%: ${d.true}</p>
+          <p>2P%: ${(d.twoPct * 100).toFixed(1)}%</p>
+          <p>2PA: ${d.twoAtt}</p>
+          <p>3P%: ${(d.threePct * 100).toFixed(1)}%</p>
+          <p>3PA: ${d.threeAtt}</p>
+          <p>TS%: ${(d.true * 100).toFixed(1)}%</p>
           <p>Minutes Played: ${d.minutes}</p>
         `);
   }
@@ -155,9 +157,10 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
           var val = v[0];
           return {
             age: val.age,
-            fga: val.fga,
-            three: val.three,
-            two: val.two,
+            threePct: val.threePct,
+            threeAtt: val.threeAtt,
+            twoPct: val.twoPct,
+            twoAtt: val.twoAtt,
             true: val.true,
             minutes: val.minutes
           };
@@ -184,16 +187,17 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
 });
 
 function formatter(row) {
-  // remove rows for players with < 500 FGA
-  if (row.FGA < 500) return;
+  // remove rows for players with < 100 3PT or 2PT attempts 
+  if (row["3PA"] < 100 || row["2PA"] < 100) return;
 
   var obj = {
     year: +row.Year,
     player: row.Player,
     age: row.Age,
-    fga: row.FGA,
-    three: row["3P%"],
-    two: row["2P%"],
+    threePct: row["3P%"],
+    threeAtt: row["3PA"],
+    twoPct: row["2P%"],
+    twoAtt: row["2PA"],
     true: row["TS%"],
     minutes: +row.MP
   }
