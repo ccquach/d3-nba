@@ -60,17 +60,17 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
     // scales
     var xScale =
       d3.scaleLinear()
-        .domain([0, 1])
+        .domain(d3.extent(data, d => d.two))
         .range([padding, width - padding]);
 
     var yScale =
       d3.scaleLinear()
-        .domain([0, 1])
+        .domain(d3.extent(data, d => d.three))
         .range([height - padding, padding]);
 
     var fScale =
       d3.scaleLinear()
-        .domain([0, 1])
+        .domain(d3.extent(data, d => d.true))
         .range(["blue", "red"]);
 
     var rScale =
@@ -88,6 +88,28 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
     // title
     d3.select(".title")
         .text(`NBA 2PT% vs 3PT% (${year})`);
+
+    // draw circles
+    var update =
+      svg.selectAll("circle")
+        .data(data, d => d.player);
+
+    // delete
+    update
+      .exit()
+      .remove();
+
+    // add new elements
+    update
+      .enter()
+      .append("circle")
+        .attr("stroke", "white")
+        .attr("stroke-width", 1)
+      .merge(update)
+        .attr("cx", d => xScale(d.two))
+        .attr("cy", d => yScale(d.three))
+        .attr("r", d => rScale(d.minutes))
+        .attr("fill", d => fScale(d.true));
   }
   
   function formatAllData(data) {
@@ -115,10 +137,7 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
         var statsObj = yearObj[year][player];
         var vals = Object.values(statsObj);
         if (!vals.includes(null)) {
-          var newObj = {
-            year: +year,
-            player: player
-          }
+          var newObj = { player: player }
           yearArray.push(Object.assign(newObj, statsObj))
         }
       }
@@ -137,10 +156,10 @@ function formatter(row) {
   var obj = {
     year: +row.Year,
     player: row.Player,
-    fga: +row.FGA,
-    three: +row["3P%"],
-    two: +row["2P%"],
-    true: +row["TS%"],
+    fga: row.FGA,
+    three: row["3P%"],
+    two: row["2P%"],
+    true: row["TS%"],
     minutes: +row.MP
   }
   // replace empty values with null
