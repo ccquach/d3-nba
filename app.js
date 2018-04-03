@@ -113,6 +113,8 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
         .attr("cy", d => yScale(d.three))
         .attr("stroke", "white")
         .attr("stroke-width", 1)
+        .on("mousemove touchstart", showTooltip)
+        .on("mouseout touchend", hideTooltip)
       .merge(update)
       .transition(t)
       .ease(d3.easeSinInOut)
@@ -120,6 +122,27 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
         .attr("cy", d => yScale(d.three))
         .attr("r", d => rScale(d.minutes))
         .attr("fill", d => fScale(d.true));
+  }
+
+  function showTooltip(d) {
+    var tooltip = d3.select(".tooltip");
+    tooltip
+        .style("opacity", 1)
+        .style("left", d3.event.pageX - tooltip.node().offsetWidth / 2 + "px")
+        .style("top", d3.event.pageY + 20 + "px")
+        .html(`
+          <p>Player: ${d.player}</p>
+          <p>Age: ${d.age}</p>
+          <p>2PT%: ${d.two}</p>
+          <p>3PT%: ${d.three}</p>
+          <p>TS%: ${d.true}</p>
+          <p>Minutes Played: ${d.minutes}</p>
+        `);
+  }
+
+  function hideTooltip() {
+    d3.select(".tooltip")
+        .style("opacity", 0);
   }
   
   function formatAllData(data) {
@@ -131,6 +154,7 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
         .rollup(function(v) {
           var val = v[0];
           return {
+            age: val.age,
             fga: val.fga,
             three: val.three,
             two: val.two,
@@ -166,6 +190,7 @@ function formatter(row) {
   var obj = {
     year: +row.Year,
     player: row.Player,
+    age: row.Age,
     fga: row.FGA,
     three: row["3P%"],
     two: row["2P%"],
