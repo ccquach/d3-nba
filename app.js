@@ -94,18 +94,28 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
       svg.selectAll("circle")
         .data(data, d => d.player);
 
+    var t =
+      d3.transition()
+        .duration(750);
+
     // delete
     update
       .exit()
+      .transition(t)
+        .attr("r", 0)
       .remove();
 
     // add new elements
     update
       .enter()
       .append("circle")
+        .attr("cx", d => xScale(d.two))
+        .attr("cy", d => yScale(d.three))
         .attr("stroke", "white")
         .attr("stroke-width", 1)
       .merge(update)
+      .transition(t)
+      .ease(d3.easeSinInOut)
         .attr("cx", d => xScale(d.two))
         .attr("cy", d => yScale(d.three))
         .attr("r", d => rScale(d.minutes))
