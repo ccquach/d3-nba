@@ -154,15 +154,14 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
         .key(d => d.year)
         .key(d => d.player)
         .rollup(function(v) {
-          var val = v[0];
           return {
-            age: val.age,
-            threePct: val.threePct,
-            threeAtt: val.threeAtt,
-            twoPct: val.twoPct,
-            twoAtt: val.twoAtt,
-            true: val.true,
-            minutes: val.minutes
+            age: v[0].age,
+            threePct: d3.mean(v, d => d.threePct),
+            threeAtt: d3.sum(v, d => d.threeAtt),
+            twoPct: d3.mean(v, d => d.twoPct),
+            twoAtt: d3.sum(v, d =>d.twoAtt),
+            true: d3.mean(v, d => d.true),
+            minutes: d3.sum(v, d => d.minutes)
           };
         })
         .object(data);
