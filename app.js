@@ -23,14 +23,14 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
 
   // labels
   svg.append("text")
-      .text("2PT%")
+      .text("2-Point Percentage")
       .attr("x", width / 2)
       .attr("y", height)
       .attr("dy", "-1.5em")
       .attr("text-anchor", "middle");
 
   svg.append("text")
-      .text("3PT%")
+      .text("3-Point Percentage")
       .attr("transform", "rotate(-90)")
       .attr("x", -height / 2)
       .attr("dy", "1.0em")
@@ -88,10 +88,12 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
 
     // axes
     d3.select(".x-axis")
-        .call(d3.axisBottom(xScale));
+        .call(d3.axisBottom(xScale)
+                .tickFormat(d3.format(".0%")));
 
     d3.select(".y-axis")
-        .call(d3.axisLeft(yScale));
+        .call(d3.axisLeft(yScale)
+                .tickFormat(d3.format(".0%")));
 
     // title
     d3.select(".title")
