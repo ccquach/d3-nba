@@ -33,7 +33,7 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
       .text("3PT%")
       .attr("transform", "rotate(-90)")
       .attr("x", -height / 2)
-      .attr("y", "1.5em")
+      .attr("dy", "1.0em")
       .attr("text-anchor", "middle");
 
   // title
