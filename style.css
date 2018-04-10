@@ -2,9 +2,13 @@
 	font-family: "Play", sans-serif;
 }
 
-svg,
-input {
+svg {
   margin: 0 auto;
+  display: block;
+}
+
+input {
+  margin: 10px auto;
   display: block;
 }
 
