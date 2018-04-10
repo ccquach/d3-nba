@@ -144,11 +144,11 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
           <p>Player: ${d.player}</p>
           <p>Age: ${d.age}</p>
           <p>2P%: ${(d.twoPct * 100).toFixed(1)}%</p>
-          <p>2PA: ${d.twoAtt}</p>
+          <p>2PA: ${d.twoAtt.toLocaleString()}</p>
           <p>3P%: ${(d.threePct * 100).toFixed(1)}%</p>
-          <p>3PA: ${d.threeAtt}</p>
+          <p>3PA: ${d.threeAtt.toLocaleString()}</p>
           <p>TS%: ${(d.true * 100).toFixed(1)}%</p>
-          <p>Minutes Played: ${d.minutes}</p>
+          <p>Minutes Played: ${d.minutes.toLocaleString()}</p>
         `);
   }
 
