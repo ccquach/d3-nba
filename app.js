@@ -44,6 +44,14 @@ d3.csv("./Seasons_Stats.csv", formatter, function(error, data) {
       .style("font-size", "1.5em")
       .classed("title", true);
 
+  // description
+  svg.append("text")
+  	.attr("x", width / 2)
+  	.attr("y", "4.5em")
+  	.attr("text-anchor", "middle")
+  	.style("font-size", "1.0em")
+  	.text("Players with at least 100 3PT and 2PT attempts.");
+
   // year range input
   d3.select("input")
       .property("min", yearRange[0])
